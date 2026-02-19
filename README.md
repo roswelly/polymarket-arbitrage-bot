@@ -4,33 +4,21 @@ This polymarket arbitrage trading bot utilizes the five arbitrage strategies imp
 
 ## Overview
 
-The bot uses multiple strategies to identify arbitrage opportunities on Polymarket prediction markets. Each strategy targets different market inefficiencies and operates across multiple timeframes (5m, 15m, 1h).
+The polymarket arbitrage trading bot uses multiple strategies to identify arbitrage opportunities on Polymarket prediction markets. Each strategy targets different market inefficiencies and operates across multiple timeframes (5m, 15m, 1h).
 
 ## For consulting with strategies and purchase, contact me at [@roswellecho](https://t.me/roswellecho)
 
 ## Strategy 1: Intra-Market Arbitrage
 
-**Type:** Risk-free arbitrage  
-**Priority:** Highest  
-**Timeframe:** All
-
-### How It Works
-
 In binary prediction markets, YES and NO tokens should always sum to $1.00. When the combined price of YES + NO is less than $1.00 (after fees), you can buy both outcomes and guarantee a profit.
-
-### Example
-
-- YES token: $0.45
-- NO token: $0.50
-- Total cost: $0.95
-- Fees (2%): $0.019
-- Gas: $0.014
-- Total with fees: $0.983
-- Profit: $1.00 - $0.983 = $0.017 per share (1.7% return)
 
 ### Execution
 
-Buy both YES and NO tokens simultaneously. On market resolution, one token pays $1.00, guaranteeing profit regardless of outcome.
+Buy both YES and NO tokens simultaneously, then:
+1. Buy YES and NO tokens separately through the CLOB API
+2. Merge tokens into complete sets
+3. Redeem complete sets immediately for $1.00 per share
+4. Profit is realized immediately (no waiting for resolution)
 
 ### Configuration
 
@@ -42,28 +30,15 @@ Buy both YES and NO tokens simultaneously. On market resolution, one token pays 
 
 ## Strategy 2: Combinatorial Arbitrage
 
-**Type:** Risk-free arbitrage  
-**Priority:** High  
-**Timeframe:** 1h
-
-### How It Works
-
 For markets with multiple outcomes (e.g., price ranges), the sum of all outcome prices should equal $1.00. When the total is less than $1.00, buy all outcomes for guaranteed profit.
-
-### Example
-
-Market: "BTC price range at end of month"
-- $60k-$70k: $0.30
-- $70k-$80k: $0.35
-- $80k-$90k: $0.20
-- $90k+: $0.10
-- Total: $0.95
-- After fees: $0.97
-- Profit: $0.03 per share (3.1% return)
 
 ### Execution
 
-Buy all outcome tokens in the market. One outcome will resolve to $1.00, ensuring profit.
+Buy all outcome tokens in the market, then:
+1. Buy all outcome tokens separately through the CLOB API
+2. Merge tokens into complete sets
+3. Redeem complete sets immediately for $1.00 per share
+4. Profit is realized immediately (no waiting for resolution)
 
 ### Configuration
 
@@ -75,22 +50,7 @@ Buy all outcome tokens in the market. One outcome will resolve to $1.00, ensurin
 
 ## Strategy 3: Cross-Platform Arbitrage
 
-**Type:** Directional trade  
-**Priority:** Medium  
-**Timeframe:** All
-
-### How It Works
-
 Compares Polymarket prediction prices with actual spot prices from exchanges (Binance/CoinGecko). When there's a significant discrepancy, trade on the assumption that Polymarket will converge to the fair price.
-
-### Example
-
-Market: "Will BTC be above $100k by Friday?"
-- Polymarket YES price: $0.45
-- Current BTC spot: $99,800 (rising)
-- Fair probability estimate: ~70%
-- Mispricing: $0.25 (YES is underpriced)
-- Action: Buy YES, expect price to rise toward $0.70
 
 ### Fair Probability Calculation
 
@@ -113,22 +73,7 @@ Buy the underpriced outcome (YES or NO) and wait for market correction.
 
 ## Strategy 4: Endgame Arbitrage
 
-**Type:** High-probability directional  
-**Priority:** High  
-**Timeframe:** Near resolution
-
-### How It Works
-
 When a market is close to resolution and one outcome has very high probability (>93%), buy that outcome for a small but near-certain profit.
-
-### Example
-
-Market: "BTC above $50k by end of day?" (resolves in 2 hours)
-- BTC currently at $67,000
-- YES price: $0.96
-- Buy at $0.96, collect $1.00 on resolution
-- Profit: $0.04 per share (4.2% in 2 hours)
-- Annualized: ~18,000% APR
 
 ### Execution
 
@@ -144,12 +89,6 @@ Buy the high-probability outcome and hold until resolution.
 ---
 
 ## Strategy 5: Momentum/Mean-Reversion
-
-**Type:** Technical analysis  
-**Priority:** Medium  
-**Timeframe:** 5m, 15m, 1h
-
-### How It Works
 
 Tracks Polymarket YES/NO prices as a price series and applies technical indicators:
 - Z-score: Measures how far current price is from mean
@@ -218,8 +157,6 @@ Strategy priorities:
 5. Momentum/Mean-reversion: 0.70
 
 ## Risk Management
-
-All strategies are subject to risk management controls:
 
 - Maximum position size per trade
 - Maximum portfolio exposure
@@ -314,8 +251,6 @@ Some strategies (Cross-Platform, Momentum) run across multiple timeframes (5m, 1
 - Capture short-term scalping opportunities (5m)
 - Identify swing trades (15m)
 - Take position trades (1h)
-
-All timeframe signals are ranked together, so a high-confidence 5m signal might rank higher than a lower-confidence 1h signal.
 
 ## Configuration
 
