@@ -124,7 +124,7 @@ When a market is close to resolution and one outcome has very high probability (
 ### Example
 
 Market: "BTC above $50k by end of day?" (resolves in 2 hours)
-- BTC currently at $98,000
+- BTC currently at $67,000
 - YES price: $0.96
 - Buy at $0.96, collect $1.00 on resolution
 - Profit: $0.04 per share (4.2% in 2 hours)
